@@ -10,6 +10,7 @@ npm install
 npm run dev       # http://localhost:5173
 npm run build     # خروجی در dist/ (شامل service worker و manifest)
 npm run preview
+npm run build:demo  # نسخه‌ی تک‌فایلی برای نمایش/اشتراک: dist-demo/bamboo-demo.html
 ```
 
 ## ساختار

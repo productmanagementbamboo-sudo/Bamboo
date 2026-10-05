@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, createMemoryRouter, RouterProvider } from 'react-router';
 import { AppShell } from '@/layout/AppShell';
 import { RequireAuth } from '@/features/auth/RequireAuth';
 import { HomePage } from '@/features/home/HomePage';
@@ -20,7 +20,10 @@ import { ComingSoon } from '@/features/misc/ComingSoon';
 const auth = (el: ReactNode) => <RequireAuth>{el}</RequireAuth>;
 const soon = (title: string) => <ComingSoon title={title} />;
 
-const router = createBrowserRouter([
+// The single-file demo runs where the URL can't change, so it routes in memory.
+const createRouter = import.meta.env.VITE_ROUTER === 'memory' ? createMemoryRouter : createBrowserRouter;
+
+const router = createRouter([
   {
     element: <AppShell />,
     children: [

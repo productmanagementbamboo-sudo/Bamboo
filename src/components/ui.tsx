@@ -1,6 +1,6 @@
 // Small presentational building blocks shared across pages.
 import { useEffect, useState, type ReactNode } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { Icon } from './Icon';
 import { useUi } from '@/store/ui';
 
@@ -29,9 +29,9 @@ export function Chevron() {
 /** Back = browser history when there is any, otherwise a sensible parent. */
 export function useBack(fallback = '/') {
   const navigate = useNavigate();
+  const { key } = useLocation(); // 'default' only on the entry the app was opened at
   return () => {
-    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
-    if (idx > 0) navigate(-1);
+    if (key !== 'default') navigate(-1);
     else navigate(fallback, { replace: true });
   };
 }
