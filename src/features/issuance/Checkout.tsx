@@ -10,10 +10,11 @@ import { PaySheet, type PayResult, type Rail } from './PaySheet';
 export interface CheckoutResult extends PayResult { useWallet: boolean; investAmount: number }
 
 /** Invoice + wallet/Lotus balance + payment rail. Shared by all purchase flows. */
-export function Checkout({ lines, total, payLabel, onPaid }: {
+export function Checkout({ lines, total, payLabel, zeroLabel = 'تسویه کامل با کیف‌پول و نهایی‌سازی', onPaid }: {
   lines: { label: string; value: string; disc?: boolean }[];
   total: number;
   payLabel: string;
+  zeroLabel?: string;
   onPaid(r: CheckoutResult): void;
 }) {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ export function Checkout({ lines, total, payLabel, onPaid }: {
         <Icon name="chevron" size={14} />
       </button>
 
-      <button className="btn-primary" onClick={pay}>{delta === 0 ? 'تسویه کامل با کیف‌پول و نهایی‌سازی' : payLabel}</button>
+      <button className="btn-primary" onClick={pay}>{delta === 0 ? zeroLabel : payLabel}</button>
 
       <AmountSheet open={investOpen} title="افزایش موجودی از سرمایه‌گذاری" assetLabel="ارزش فعلی دارایی در لوتوس پارسیان"
         max={wallet.invest} initial={invest || 1000000} note={LOTUS_NOTE} confirmLabel="تایید و افزودن به کیف پول"

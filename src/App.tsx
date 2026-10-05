@@ -13,6 +13,8 @@ import { InstallmentsPage } from '@/features/profile/InstallmentsPage';
 import { PaymentsPage } from '@/features/profile/PaymentsPage';
 import { WalletPage } from '@/features/wallet/WalletPage';
 import { ThirdPartyFlow } from '@/features/issuance/ThirdPartyFlow';
+import { BodyFlow } from '@/features/issuance/BodyFlow';
+import { EndorseFlow } from '@/features/endorse/EndorseFlow';
 import { ComingSoon } from '@/features/misc/ComingSoon';
 
 const auth = (el: ReactNode) => <RequireAuth>{el}</RequireAuth>;
@@ -38,10 +40,10 @@ const router = createBrowserRouter([
 
       // Purchase
       { path: '/issue/third-party', element: <ThirdPartyFlow /> },
+      { path: '/issue/body', element: <BodyFlow /> },
+      { path: '/endorse', element: auth(<EndorseFlow />) },
 
       // Not ported yet (phase 2+)
-      { path: '/issue/body', element: soon('بیمه بدنه') },
-      { path: '/endorse', element: auth(soon('الحاقیه')) },
       { path: '/accident', element: soon('تصادف کردم') },
       { path: '/claim/new', element: auth(soon('اعلام خسارت')) },
       { path: '/claims/:id', element: auth(soon('پرونده‌ی خسارت')) },

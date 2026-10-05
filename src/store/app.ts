@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type {
-  Claim, Contact, DemoFlags, Installment, Payment, Policy, PolicyKind, WalletTx,
+  Claim, Contact, DemoFlags, Endorsement, Installment, Payment, Policy, PolicyKind, WalletTx,
 } from '@/api/types';
 import { todayFa } from '@/lib/format';
 import { seedClaims, seedContacts, seedInstallments, seedPayments, seedPolicies } from './seed';
@@ -38,6 +38,8 @@ interface AppState {
   toggleDemo(k: keyof DemoFlags): void;
   purchase(input: PurchaseInput): Policy;
   activatePolicy(id: string, code: string): void;
+  completeBodyDocs(id: string, code: string | null, track: string, secs: number): Policy | undefined;
+  addEndorsement(policyId: string, e: Endorsement): void;
   cashOutInvest(amount: number): void;
   withdraw(amount: number): void;
   addContact(c: Omit<Contact, 'id' | 'status'>): void;
@@ -133,6 +135,22 @@ export const useApp = create<AppState>()((set, get) => ({
 
   activatePolicy: (id, code) =>
     set((s) => ({ policies: s.policies.map((p) => (p.id === id ? { ...p, status: 'active', code } : p)) })),
+
+  completeBodyDocs: (id, code, track, secs) => {
+    set((s) => ({
+      policies: s.policies.map((p) =>
+        p.id === id
+          ? { ...p, status: code ? 'active' : 'pending', code, track, issued: todayFa(), expires: todayFa(365), secs }
+          : p),
+    }));
+    return get().policies.find((p) => p.id === id);
+  },
+
+  addEndorsement: (policyId, e) =>
+    set((s) => ({
+      policies: s.policies.map((p) => (p.id === policyId ? { ...p, endorse: [...p.endorse, e] } : p)),
+      payments: e.amount ? [{ t: 'الحاقیه: افزایش سقف تعهد', d: todayFa(), a: e.amount }, ...s.payments] : s.payments,
+    })),
 
   cashOutInvest: (amount) =>
     set((s) => ({
